@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npx prisma generate && node server.js"
+    "build": "npx prisma generate"
   },
   "keywords": [],
   "author": "Duy",
