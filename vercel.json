@@ -9,6 +9,11 @@
       }
     }
   ],
+  "functions": {
+    "node_modules/.prisma/client": {
+      "maxDuration": 10
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
@@ -16,4 +21,3 @@
     }
   ]
 }
-
