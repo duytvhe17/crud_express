@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin sản phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+        }
+        .specs-container {
+            width: 66%;
+            margin: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .specs {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .spec-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: white;
+        }
+        .spec-item h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            border-bottom: 1px solid #ddd;
+        }
+        .spec-item p {
+            margin: 5px 0;
+        }
+        input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 13px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+            outline: none;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .update-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .back-button {
+            background-color: #007bff;
+            color: white;
+        }
+        .update-button:hover, .back-button:hover {
+            opacity: 0.8;
+        }
+        .view-button {
+            background-color: #00A8FF;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            
+        }
+        .view-button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thông số kỹ thuật của <%= product.name %></h1>
+
+    <div class="specs-container">
+        <form action="/product/update/<%= product.id %>" method="POST">
+            <div class="specs">
+                <!-- Link -->
+                <div class="spec-item">
+                    <h2>Link</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <!-- Thêm nút bấm "Xem sản phẩm" -->
+                        <a href="<%= product.link %>" class="view-button" target="_blank">Xem sản phẩm</a>
+                    </div>
+                </div>
+                
+
+                <div class="spec-item">
+                    <h2>Màn hình</h2>
+                    <p>Kích thước màn hình:</p>
+                    <input type="text" name="screen" value="<%= product.details ? product.details.screen : '' %>">
+                    <p>Độ phân giải:</p>
+                    <input type="text" name="resolution" value="<%= product.details ? product.details.resolution : '' %>">
+                    <p>Tần số quét:</p>
+                    <input type="text" name="refreshRate" value="<%= product.details ? product.details.refreshRate : '' %>">
+                    <p>Công nghệ màn hình:</p>
+                    <input type="text" name="displayTechnology" value="<%= product.details ? product.details.displayTechnology : '' %>">
+                    <p>Độ sáng:</p>
+                    <input type="text" name="brightness" value="<%= product.details ? product.details.brightness : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Camera</h2>
+                    <input type="text" name="camera" value="<%= product.details ? product.details.camera : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Đặc tính</h2>
+                    <input type="text" name="features" value="<%= product.details ? product.details.features : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Hệ điều hành</h2>
+                    <input type="text" name="os" value="<%= product.details ? product.details.os : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Bộ nhớ</h2>
+                    <input type="text" name="memoryStorage" value="<%= product.details ? product.details.memoryStorage : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Thiết kế - Trọng lượng</h2>
+                    <input type="text" name="designWeight" value="<%= product.details ? product.details.designWeight : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Pin</h2>
+                    <input type="text" name="battery" value="<%= product.details ? product.details.battery : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Kết nối</h2>
+                    <input type="text" name="connectivity" value="<%= product.details ? product.details.connectivity : '' %>">
+                </div>
+
+                <div class="spec-item">
+                    <h2>Tiện ích</h2>
+                    <input type="text" name="utilities" value="<%= product.details ? product.details.utilities : '' %>">
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="update-button">Cập nhật</button>
+                <a href="/products"><button type="button" class="back-button">Quay lại</button></a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

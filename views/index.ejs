@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sản phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-header {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .profile-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 10px;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            z-index: 1;
+        }
+        .dropdown li {
+            padding: 10px;
+            text-align: left;
+        }
+        .dropdown li a {
+            text-decoration: none;
+            color: black;
+            display: block;
+        }
+        .profile-menu:hover .dropdown {
+            display: block;
+        }
+        .cart-icon {
+            font-size: 24px;
+            color: #e74c3c;
+            text-decoration: none;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            margin: 20px 0;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .search-input {
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            flex: 1; /* Cho phép input mở rộng theo chiều ngang */
+            min-width: 300px; /* Đảm bảo chiều rộng tối thiểu */
+        }
+        .search-button {
+            border: none;
+            outline: none;
+            background-color: #00a8ff; /* Màu nền nút */
+            color: white; /* Màu chữ nút */
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 1px solid #ccc; /* Viền giữa input và nút */
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .search-button:hover {
+            background-color: #007acc; /* Màu nền khi hover */
+        }
+        .search-input::placeholder {
+            color: #aaa; /* Màu chữ placeholder */
+        }
+        .add-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .add-button a {
+            padding: 10px 20px;
+            background-color: #00A8FF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .main-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            font-size: 16px;
+            color: black;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar ul li a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .price-filter-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .price-filter-container h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .products {
+            flex: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .product-img {
+            width: 50px;
+            height: auto;
+            object-fit: cover;
+        }
+        td a, td button {
+            padding: 5px 10px;
+            background-color: #00A8FF;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        td button {
+            background-color: #28a745;
+        }
+        td button:hover, td a:hover {
+            opacity: 0.8;
+        }
+        form {
+            display: inline;
+        }
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            text-decoration: none;
+            color: black;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination a.active, .pagination-page.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .pagination-arrow {
+            font-weight: bold;
+        }
+        .pagination-ellipsis {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Danh sách sản phẩm</h1>
+
+        <div class="header">
+            <div class="profile-menu">
+                <div class="profile-header">
+                    <img src="https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg" alt="User Avatar" class="avatar">
+                    <span class="username"><%= typeof user !== 'undefined' && user ? user.name : 'Guest' %></span>
+                </div>
+                <ul class="dropdown">
+                    <li><a href="/profile">Thông tin cá nhân</a></li>
+                    <li><a href="/orders">Đơn hàng</a></li>
+                    <li><a href="/change-password">Thay đổi mật khẩu</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            <a href="/cart" class="cart-icon">🛒</a>
+        </div>
+
+        <div class="search-container">
+            <form action="/products" method="GET" class="search-form">
+                <input
+                  type="text"
+                  name="search"
+                  class="search-input"
+                  placeholder="Hôm nay bạn muốn tìm kiếm gì?"
+                  value="<%= currentSearch || '' %>"
+                >
+                <button type="submit" class="search-button">🔍 Tìm kiếm</button>
+            </form>
+        </div>
+
+        <div class="add-button">
+            <a href="/add-product">Thêm sản phẩm mới</a>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>Danh mục</h3>
+                <ul>
+                    <% categories.forEach(category => { %>
+                        <li>
+                            <a href="/products?category=<%= category.name %>">
+                                <img src="<%= category.icon %>" alt="<%= category.name %>">
+                                <%= category.name %>
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+
+                <div class="price-filter-container">
+                    <h3>Mức giá</h3>
+                    <form action="/products" method="GET">
+                        <input type="range" name="minPrice" id="minPrice" min="0" max="50000000" step="100000" value="<%= minPrice || 0 %>">
+                        <input type="range" name="maxPrice" id="maxPrice" min="0" max="50000000" step="100000" value="<%= maxPrice || 50000000 %>">
+                        <div>
+                            <span id="minPriceDisplay"><%= minPrice ? parseInt(minPrice).toLocaleString() : '0' %> đ</span> -
+                            <span id="maxPriceDisplay"><%= maxPrice ? parseInt(maxPrice).toLocaleString() : '50,000,000' %> đ</span>
+                        </div>
+                        <button type="submit" style="background-color: #00A8FF; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">Áp dụng</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="products">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Hình ảnh</th>
+                            <th>Giá tiền</th>
+                            <th>Số lượng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% products.forEach(function(product) { %>
+                        <tr>
+                            <td><a href="/product/<%= product.id %>"><%= product.name %></a></td>
+                            <td>
+                                <% if (product.imageUrl) { %>
+                                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-img">
+                                <% } else { %>
+                                    Không có hình ảnh
+                                <% } %>
+                            </td>
+                            <td><%= product.price ? product.price.toLocaleString() + ' đ' : 'N/A' %></td>
+                            <td><%= product.quantity !== null ? product.quantity : 'N/A' %></td>
+                            <td>
+                                <form action="/cart/add/<%= product.id %>" method="post">
+                                    <button type="submit">Thêm vào giỏ hàng</button>
+                                </form>
+                                <a href="/edit-product/<%= product.id %>">Sửa</a>
+                                <form action="/delete-product/<%= product.id %>" method="post" onsubmit="return confirmDelete();">
+                                    <button type="submit">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+
+                <% if (totalPages > 1) { %>
+                <div class="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
+                    <% if (currentPage > 1) { %>
+                        <a href="/products?page=1&category=<%= currentCategory %>" class="pagination-arrow">«</a>
+                        <a href="/products?page=<%= currentPage - 1 %>&category=<%= currentCategory %>" class="pagination-arrow">‹</a>
+                    <% } %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <% if (i === currentPage) { %>
+                            <span class="pagination-page active"><%= i %></span>
+                        <% } else if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) { %>
+                            <a href="/products?page=<%= i %>&category=<%= currentCategory %>" class="pagination-page"><%= i %></a>
+                        <% } else if (i === currentPage - 3 || i === currentPage + 3) { %>
+                            <span class="pagination-ellipsis">...</span>
+                        <% } %>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="/products?page=<%= currentPage + 1 %>&category=<%= currentCategory %>" class="pagination-arrow">›</a>
+                        <a href="/products?page=<%= totalPages %>&category=<%= currentCategory %>" class="pagination-arrow">»</a>
+                    <% } %>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const minPriceInput = document.getElementById('minPrice');
+        const maxPriceInput = document.getElementById('maxPrice');
+        const minPriceDisplay = document.getElementById('minPriceDisplay');
+        const maxPriceDisplay = document.getElementById('maxPriceDisplay');
+
+        minPriceInput.addEventListener('input', () => {
+            minPriceDisplay.textContent = parseInt(minPriceInput.value).toLocaleString() + ' đ';
+        });
+
+        maxPriceInput.addEventListener('input', () => {
+            maxPriceDisplay.textContent = parseInt(maxPriceInput.value).toLocaleString() + ' đ';
+        });
+
+        function confirmDelete() {
+            return confirm("Bạn có chắc chắn muốn xóa mục này chứ?");
+        }
+    </script>
+</body>
+</html>

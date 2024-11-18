@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+
+        .input-field input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding-left: 10px;
+            background: none;
+        }
+
+        .input-field i {
+            margin-right: 10px;
+            color: #888;
+        }
+
+        .forgot-password {
+            text-align: right;
+            display: block;
+            font-size: 12px;
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password:hover {
+            color: #333;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            background-color: #f64c77;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #ec2f63;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #bbb;
+        }
+
+        .success-message {
+            text-align: center;
+            color: green;
+            margin-bottom: 10px;
+        }
+
+        /* Căn giữa nút và loại bỏ dấu gạch dưới */
+        .google-login {
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .google-login button {
+            background-color: #ec2f63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .google-login button img {
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .google-login button:hover {
+            background-color: #c4372b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h3>Đăng nhập</h3>
+        
+        <% if (message) { %>
+            <div class="success-message"><%= message %></div>
+        <% } %>
+        
+        <form action="/login" method="post">
+            <div class="input-field">
+                <i class="fa fa-user"></i>
+                <input type="email" name="email" placeholder="E-mail" required>
+            </div>
+            <div class="input-field">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Mật khẩu" required>
+            </div>
+            <a href="/forgot-password" class="forgot-password">Quên mật khẩu?</a>
+            <input type="submit" value="Đăng nhập" class="submit-btn">
+            <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+        </form>
+        <a href="/auth/google" class="google-login">
+            <button>
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+                Login with google
+            </button>
+        </a>
+        
+    </div>
+</body>
+
+</html>

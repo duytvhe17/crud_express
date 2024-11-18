@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            color: #e74c3c;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            margin-right: 10px;
+        }
+        button:last-child {
+            margin-right: 0;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .back-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Thông tin cá nhân</h2>
+        <form action="/update-profile" method="post">
+            <label for="name">Tên:</label>
+            <input type="text" id="name" name="name" value="<%= user.name %>" required>
+
+            <label for="age">Tuổi:</label>
+            <input type="number" id="age" name="age" value="<%= user.age %>">
+
+            <label for="address">Nơi ở:</label>
+            <input type="text" id="address" name="address" value="<%= user.address %>">
+
+            <label for="gender">Giới tính:</label>
+            <select id="gender" name="gender">
+                <option value="Nam" <%= user.gender === 'Nam' ? 'selected' : '' %>>Nam</option>
+                <option value="Nữ" <%= user.gender === 'Nữ' ? 'selected' : '' %>>Nữ</option>
+                <option value="Khác" <%= user.gender === 'Khác' ? 'selected' : '' %>>Khác</option>
+            </select>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" readonly>
+
+            <div class="button-group">
+                <button type="submit">Cập nhật</button>
+                <a href="/products" class="back-button">Quay lại danh sách sản phẩm</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

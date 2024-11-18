@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm sản phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            position: relative;
+        }
+        h3 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"], .back-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        input[type="submit"]:hover, .back-button:hover {
+            background-color: #218838;
+        }
+        .back-button {
+            background-color: #007bff;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Thêm mới sản phẩm</h3>
+        <form action="/add-product" method="post">
+            <label for="category">Danh mục sản phẩm</label>
+            <select name="category" required>
+                <% categories.forEach(function(category) { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                <% }); %>
+            </select>
+            
+            <label for="name">Tên sản phẩm</label>
+            <input type="text" name="name" required>
+            
+            <label for="link">Link sản phẩm</label>
+            <input type="text" name="link" required>
+            
+            <label for="imageUrl">Hình ảnh (URL)</label>
+            <input type="text" name="imageUrl">
+            
+            <label for="price">Giá tiền</label>
+            <input type="number" name="price" step="0.01">
+            
+            <label for="quantity">Số lượng</label>
+            <input type="number" name="quantity" min="0">
+            
+            <input type="submit" value="Thêm sản phẩm">
+        </form>
+
+        <!-- Nút quay lại -->
+        <a href="/products">
+            <button class="back-button">Quay lại</button>
+        </a>
+    </div>
+</body>
+</html>

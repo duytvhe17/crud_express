@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán qua QR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .account-info {
+            font-size: 18px;
+            color: #333;
+        }
+        .product-info {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+            text-align: left;
+        }
+        .product-info p {
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Quét mã QR để thanh toán</h2>
+
+        <img src="/images/QR-code.jpg" alt="QR Code để thanh toán">
+        
+        <div class="product-info">
+            <h3>Thông tin đơn hàng:</h3>
+            <% order.orderDetails.forEach(detail => { %>
+                <p><strong>Sản phẩm:</strong> <%= detail.product.name %></p>
+                <p><strong>Số lượng:</strong> <%= detail.quantity %></p>
+                <p><strong>Giá:</strong> <%= detail.product.price.toLocaleString() %> đ</p>
+            <% }) %>
+            <p><strong>Ngày đặt:</strong> <%= order.date.toDateString() %></p>
+            <p><strong>Tổng tiền:</strong> <%= order.total.toLocaleString() %> đ</p>
+        </div>
+
+        <!-- Nút quay lại đơn hàng -->
+        <a href="/orders" class="btn">Quay lại đơn hàng</a>
+    </div>
+</body>
+</html>

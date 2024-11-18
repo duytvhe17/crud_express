@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách đơn hàng của bạn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .order {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .order-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-list {
+            list-style: none;
+            padding: 0;
+        }
+        .product-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        .product-img {
+            width: 50px;
+            height: auto;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .delete-button {
+            cursor: pointer;
+            color: #e74c3c;
+            background: none;
+            border: none;
+            font-size: 18px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .back-button {
+            background-color: #007bff;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .export-button {
+            background-color: #ff9800;
+        }
+        .export-button:hover {
+            background-color: #e68a00;
+        }
+        .pay-button {
+            background-color: #8e44ad;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .pay-button:hover {
+            background-color: #7d3c98;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Danh sách đơn hàng của bạn</h1>
+        
+        <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+                <div class="order">
+                    <div class="order-header">
+                        <span>Mã đơn hàng: <%= order.id %> - Ngày: <%= order.date.toDateString() %> - Tổng tiền: <%= order.total.toLocaleString() %> đ</span>
+                        <form action="/orders/delete/<%= order.id %>" method="post" style="display:inline;">
+                            <button type="submit" class="delete-button" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?');">🗑️</button>
+                        </form>
+                    </div>
+                    <ul class="product-list">
+                        <% order.orderDetails.forEach(detail => { %>
+                            <li>
+                                <img src="<%= detail.product.imageUrl %>" alt="<%= detail.product.name %>" class="product-img">
+                                <strong>Sản phẩm:</strong> <%= detail.product.name %> - 
+                                <strong>Số lượng:</strong> <%= detail.quantity %> - 
+                                <strong>Giá:</strong> <%= detail.product.price.toLocaleString() %> đ
+                            </li>
+                        <% }) %>
+                    </ul>
+                    <!-- Thanh toán -->
+                    <a href="/checkout/qr?orderId=<%= order.id %>" class="pay-button">Thanh toán</a>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>Bạn chưa có đơn hàng nào.</p>
+        <% } %>
+
+        <!-- Nút quay lại và Export file -->
+        <div class="button-container">
+            <button class="button back-button" onclick="window.location.href='/products'">Quay lại</button>
+            <a href="/export-orders" class="button export-button">Export to Excel</a>
+        </div>
+    </div>
+</body>
+</html>
