@@ -5,15 +5,13 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/**", "node_modules/.prisma/client/**"]
+        "includeFiles": [
+          "prisma/**",
+          "node_modules/.prisma/client/**"
+        ]
       }
     }
   ],
-  "functions": {
-    "node_modules/.prisma/client": {
-      "maxDuration": 10
-    }
-  },
   "routes": [
     {
       "src": "/(.*)",
