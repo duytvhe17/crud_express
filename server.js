@@ -1,7 +1,7 @@
 require('dotenv').config(); // Thêm dòng này để đọc biến môi trường từ .env
 
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); 
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -1116,6 +1116,147 @@ app.get('/export-orders', requireLogin, async (req, res) => {
     res.status(500).send("Có lỗi xảy ra khi xuất đơn hàng");
   }
 });
+
+
+app.get('/charts', requireLogin, async (req, res) => {
+  res.render('charts'); // Hiển thị file EJS chứa giao diện chọn biểu đồ
+});
+
+app.get('/charts/data', requireLogin, async (req, res) => {
+  const { type, timeRange, startDate, endDate } = req.query;
+  let data = { labels: [], values: [], label: '' };
+
+  try {
+      // Xử lý logic bộ lọc thời gian
+      const filter = {};
+      if (timeRange === 'today') {
+          const start = new Date();
+          start.setHours(0, 0, 0, 0);
+          const end = new Date();
+          end.setHours(23, 59, 59, 999);
+          filter.date = { gte: start, lt: end };
+      } else if (timeRange === 'yesterday') {
+          const start = new Date();
+          start.setDate(start.getDate() - 1);
+          start.setHours(0, 0, 0, 0);
+          const end = new Date();
+          end.setDate(end.getDate() - 1);
+          end.setHours(23, 59, 59, 999);
+          filter.date = { gte: start, lt: end };
+      } else if (timeRange === 'thisWeek') {
+          const now = new Date();
+          const start = new Date(now.setDate(now.getDate() - now.getDay()));
+          start.setHours(0, 0, 0, 0);
+          filter.date = { gte: start };
+      } else if (timeRange === 'lastWeek') {
+          const now = new Date();
+          const start = new Date(now.setDate(now.getDate() - now.getDay() - 7));
+          const end = new Date(now.setDate(now.getDate() - now.getDay() - 1));
+          start.setHours(0, 0, 0, 0);
+          end.setHours(23, 59, 59, 999);
+          filter.date = { gte: start, lt: end };
+      } else if (timeRange === 'custom' && startDate && endDate) {
+          filter.date = {
+              gte: new Date(startDate),
+              lte: new Date(endDate),
+          };
+      }
+
+      if (type === 'salesByDay') {
+          // Tổng sản phẩm bán ra theo ngày
+          const sales = await prisma.order.findMany({
+              where: filter,
+              orderBy: { date: 'asc' },
+              select: {
+                  date: true,
+                  total: true,
+              },
+          });
+
+          const groupedSales = sales.reduce((acc, sale) => {
+              const date = new Date(sale.date).toLocaleDateString();
+              acc[date] = (acc[date] || 0) + (sale.total || 0);
+              return acc;
+          }, {});
+
+          data.labels = Object.keys(groupedSales);
+          data.values = Object.values(groupedSales);
+          data.label = 'Sản phẩm bán ra theo ngày';
+
+      } else if (type === 'revenueByMonth') {
+          // Doanh số theo tháng
+          const sales = await prisma.order.findMany({
+              where: filter,
+              select: {
+                  date: true,
+                  total: true,
+              },
+          });
+
+          const monthlySales = sales.reduce((acc, sale) => {
+              const month = new Date(sale.date).toLocaleString('default', { month: 'long', year: 'numeric' });
+              acc[month] = (acc[month] || 0) + (sale.total || 0);
+              return acc;
+          }, {});
+
+          data.labels = Object.keys(monthlySales);
+          data.values = Object.values(monthlySales);
+          data.label = 'Doanh số sản phẩm theo tháng';
+
+      } else if (type === 'topProductsByMonth') {
+          // Sản phẩm bán nhiều nhất theo tháng
+          const start = filter.date?.gte || new Date('1970-01-01');
+          const end = filter.date?.lt || new Date();
+
+          // Truy vấn OrderDetail và liên kết với Order để lọc theo thời gian
+          const topProducts = await prisma.orderDetail.findMany({
+              where: {
+                  order: {
+                      date: {
+                          gte: start,
+                          lt: end,
+                      },
+                  },
+              },
+              select: {
+                  productId: true,
+                  quantity: true,
+              },
+          });
+
+          // Gom nhóm và tính tổng số lượng theo sản phẩm
+          const productSales = topProducts.reduce((acc, detail) => {
+              acc[detail.productId] = (acc[detail.productId] || 0) + detail.quantity;
+              return acc;
+          }, {});
+
+          // Lấy top 5 sản phẩm bán nhiều nhất
+          const sortedProducts = Object.entries(productSales)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5);
+
+          // Lấy tên sản phẩm từ bảng Product
+          const productNames = await prisma.product.findMany({
+              where: { id: { in: sortedProducts.map(([productId]) => parseInt(productId)) } },
+              select: { id: true, name: true },
+          });
+
+          const productMap = Object.fromEntries(productNames.map((p) => [p.id, p.name]));
+          data.labels = sortedProducts.map(([productId]) => productMap[parseInt(productId)] || 'Không xác định');
+          data.values = sortedProducts.map(([_, quantity]) => quantity);
+          data.label = 'Sản phẩm bán nhiều nhất theo tháng';
+
+      }  else {
+          return res.status(400).send("Loại biểu đồ không hợp lệ");
+      }
+
+      res.json(data);
+  } catch (error) {
+      console.error("Error fetching chart data:", error);
+      res.status(500).send("Có lỗi xảy ra khi lấy dữ liệu biểu đồ.");
+  }
+});
+
 
 
 app.listen(3000, () => {
